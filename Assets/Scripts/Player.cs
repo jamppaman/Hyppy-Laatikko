@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
     public Rigidbody keho;
     public float liike;
 
-    // Start is called before the first frame update
     void Start()
     {
         mennaanAlas = false;
@@ -28,10 +27,41 @@ public class Player : MonoBehaviour
         liike = Input.GetAxis("Horizontal") * liikeNopeus;
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
+        nykyinenPiste = this.transform.position.y;
+        if (nykyinenPiste > korkeinPiste && mennaanAlas == false)
+        {
+            korkeinPiste = nykyinenPiste;
+        }
+        else
+        {
+            mennaanAlas = true;
+        }
+
         Vector3 kehonliike = keho.velocity;
         kehonliike.x = liike;
         keho.velocity = kehonliike;
     }
+
+    void OnCollisionEnter (Collision collision) 
+    {
+        if(collision.gameObject.tag == "Floor") 
+        {
+            if(mennaanAlas == true) 
+            {
+                Hyppy();
+            }
+        }
+    }
+    public void Hyppy() 
+    {
+        mennaanAlas = false;
+        korkeinPiste = nykyinenPiste;
+
+        Vector3 hyppy = keho.velocity;
+        hyppy.y = hyppyVoima;
+        keho.velocity = hyppy;
+    }
+
 }
